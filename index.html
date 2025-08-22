@@ -1,0 +1,106 @@
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <link rel="stylesheet" href="style.css">
+        <title>Mortgage Calculator</title>
+</head>
+<body>
+        <div id="app">
+
+                <div class="container">
+                        <h1> {{ message }}</h1>
+                       
+
+                        <div class="grid-container">
+                                <div class="grid-item">
+                                        <label for="">Purcahse Price <span class="price">£{{purchase_price}}</span></label>
+                                        <input type="range" min=150000 max=450000 v-model="purchase_price">
+                                </div>
+                                <div class="grid-item">
+                                        <label for="">Down Payment <span class="price">£{{down_payment}}</span></label>
+                                        <input type="range" :min="minimumDownPayment" :max="purchase_price" v-model="down_payment">
+                                </div>
+                                <div class="grid-item">
+                                        <label for="">Repayment Time <span class="price">{{repayment_time}} {{ repayment_time > 1 ? 'years' : 'year'}}</span></label>
+                                        <input type="range" min=1 max=25 v-model="repayment_time">
+                                </div>
+                                <div class="grid-item">
+                                        <label for="">Ineterest Rate <span class="price">{{interest_rate}}%</span></label>
+                                        <input type="range" min=0 max=10 v-model="interest_rate">
+                                </div>
+                                <div class="grid-item">
+                                        <label for="">Loan Amount:</label>
+                                        <span class="big">£{{calculateLoanAmount}}</span>
+                                </div>
+                                <div class="grid-item">
+                                        <label for="">Est pr month:</label>
+                                        <span class="big" v-if="estimate_monthly_payment > 0"> £{{estimate_monthly_payment}}</span>
+                                        
+                                </div>
+                        </div>
+                        <button type="button" class="btn" @click="calculateMonthlyPay">Calculate</button>
+                </div>
+                
+        </div>
+
+        <script>
+        const { createApp } = Vue
+
+        createApp({
+        data() {
+                return {
+                        message: 'Mortgage Calculator',
+                        purchase_price: 150000,
+                        down_payment:0,
+                        min_down:0,
+                        repayment_time:1,
+                        interest_rate:0,
+                        estimate_monthly_payment:null
+                }
+        },
+        methods:{
+                calculateMonthlyPay() {
+                        const principal = this.purchase_price - this.down_payment;
+                        const monthlyInterest = (this.interest_rate / 100) / 12;
+                        const numberOfPayments = this.repayment_time * 12;
+
+                        let monthlyPayment;
+
+                        if (monthlyInterest === 0) {
+                        // no interest case
+                        monthlyPayment = principal / numberOfPayments;
+                        } else {
+                        // amortization formula
+                        monthlyPayment = principal * 
+                                (monthlyInterest * Math.pow(1 + monthlyInterest, numberOfPayments)) /
+                                (Math.pow(1 + monthlyInterest, numberOfPayments) - 1);
+                        }
+
+                        this.estimate_monthly_payment = monthlyPayment.toFixed(2);
+                        }
+        },
+        computed: {
+                // a computed getter
+                minimumDownPayment() {
+                        return Math.floor(this.purchase_price * (5/100))
+                },
+                calculateLoanAmount(){
+                        return this.purchase_price - this.down_payment
+                },
+               
+        },
+        watch: {
+                // whenever question changes, this function will run
+               minimumDownPayment(newVal) {
+                        this.down_payment = newVal
+                }
+        },
+        mounted() {
+                this.down_payment = this.minimumDownPayment
+                }
+        }).mount('#app')
+        </script>
+</body>
+</html>
