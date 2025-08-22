@@ -7,4 +7,4 @@ The motivation from this project stems from codecommentor.io. I like to make var
 # Framework
 Vue js
 # How to use
-For a start, the downpayment is set at 5% of the purchase price and the purchase price ranges from 150,000 to 600,000. drga each slider to the approiate range, click on the calculate button and you have your monthly repayment amount.
+For a start, the downpayment is set at 5% of the purchase price and the purchase price ranges from 150,000 to 600,000. drag each range slider to the approiate range, click on the calculate button and you have your monthly repayment amount.
