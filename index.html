@@ -82,7 +82,7 @@
                         }
         },
         computed: {
-                // a computed getter
+              
                 minimumDownPayment() {
                         return Math.floor(this.purchase_price * (5/100))
                 },
@@ -92,7 +92,7 @@
                
         },
         watch: {
-                // whenever question changes, this function will run
+              
                minimumDownPayment(newVal) {
                         this.down_payment = newVal
                 }
